@@ -307,11 +307,11 @@ Shop 서비스의 DB와 Milage 서비스의 DB를 다른 DB를 사용하여 폴�
 
 **Shop의 pom.xml DB 설정 코드**
 
-
+![shop db](https://user-images.githubusercontent.com/53815271/108074776-ed214b00-70ac-11eb-9e58-2e4353905e35.png)
 
 **Milage pom.xml DB 설정 코드**
 
-
+![마일리지 db](https://user-images.githubusercontent.com/53815271/108074774-ec88b480-70ac-11eb-8327-6a2e1d700e0c.png)
 
 # 동기식 호출 과 Fallback 처리
 
