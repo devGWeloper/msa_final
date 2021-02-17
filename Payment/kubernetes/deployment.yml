@@ -17,7 +17,7 @@ spec:
     spec:
       containers:
         - name: payment
-          image: hispres.azurecr.io/payment:v1
+          image: skuser02.azurecr.io/payment:v1
           ports:
             - containerPort: 8080
           env:
