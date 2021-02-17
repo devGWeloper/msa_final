@@ -415,6 +415,8 @@ kubectl create deploy milage --image=skuser02.azurecr.io/milage:v5 -n tutorial
 kubectl get all -n tutorial
 ```
 - Kubectl Deploy 결과 확인
+ 
+![kubectl create](https://user-images.githubusercontent.com/53815271/108164867-f6ee9100-7134-11eb-9e18-27bb24622b69.png)
 
 - Kubernetes에서 서비스 노출 (Docker 생성이기에 Port는 8080이며, Gateway는 LoadBalancer로 생성)
 ```
@@ -427,39 +429,64 @@ kubectl expose deploy milage --type="ClusterIP" --port=8080 -n tutorial
 kubectl get all -n tutorial
 ```
 
+![kubectl expose](https://user-images.githubusercontent.com/53815271/108164873-f81fbe00-7134-11eb-8b57-439ddfc51c38.png)
+
  # 오토 스케일 아웃
 - 오토 스케일을 위해 yml 파일 설정
+
+![autoscale yaml생성](https://user-images.githubusercontent.com/53815271/108164868-f6ee9100-7134-11eb-9117-e8dd827c7199.png)
  
 - 오토 스케일 적용 명령어 입력
+
+![오토스케일 명령어 입력 완료](https://user-images.githubusercontent.com/53815271/108164877-f81fbe00-7134-11eb-9e7d-9e7502208c4c.png)
 
 - 시즈 발생 후 오토스케일 결과 확인
 ```
 siege -c100 -t120S -r10 -v --content-type "application/json" 'http://Milage:8080/milages POST {"orderId": 1, "point": 100}'
 ```
+
+![오토스케일 시즈 결과](https://user-images.githubusercontent.com/53815271/108164881-f950eb00-7134-11eb-9b52-a7f37d383cf5.png)
+
+![오토스케일 되었음](https://user-images.githubusercontent.com/53815271/108164887-fa821800-7134-11eb-9d3e-8e30c0f5c2e4.png)
+
 위와 같이 시즈를 발생시켜 Milage서비스의 pod가 오토 스케일 아웃이 된 것을 확인 할 수 있다.
  
  # 무정지 배포
  - readiness 적용 이전
  
+ ![read 주석처리 yaml파일](https://user-images.githubusercontent.com/53815271/108164870-f7872780-7134-11eb-8f77-473bb3c3c150.png)
+ 
  무정지 배포적용을 하지 않은 Milage 서비스의 yml파일이다
  
  - 무정지 배포 실패 화면
+ 
+![무정지 배포 실패](https://user-images.githubusercontent.com/53815271/108164878-f8b85480-7134-11eb-871e-cdb6cd8c7c83.png)
 
 시즈를 발생시키는 도중 배포를 실행하여 몇개의 요청이 실패된것을 확인할 수 있다.
 
 - readiness 적용
 
+![read 주석 해제 yaml파일](https://user-images.githubusercontent.com/53815271/108164885-f950eb00-7134-11eb-9b52-8b5ea8678b37.png)
+
 다음과 같이 Milage 서비스의 yml파일에서 readiness를 적용하고 apply 시킨 화면이다.
 
 - 무정지 배포 성공
+
+![무정지  배포 성공](https://user-images.githubusercontent.com/53815271/108164864-f655fa80-7134-11eb-8a55-3ceebfc51b1e.png)
 
 시즈를 발생시키는 도중 배포를 실행해도 모든 요청이 성공하여 무정지 배포가 성공적으로 적용된 것을 볼 수 있다.
  
  # Self Healing (Liveness Probe)
  - Liveness Probe 적용 yml파일
  
+![live 적용 yaml파일](https://user-images.githubusercontent.com/53815271/108164871-f7872780-7134-11eb-8803-b64be0e67c5a.png)
+ 
 Milage 서비스에 Self Healing을 적용하기 위해 다음과 같이 yml파일을 작성하였다.
 
 - Liveness Probe 결과 화면
+
+![live 적용 결과](https://user-images.githubusercontent.com/53815271/108164880-f8b85480-7134-11eb-9ffe-2fc342e41c86.png)
+
+![live적용 증명](https://user-images.githubusercontent.com/53815271/108164886-f9e98180-7134-11eb-8ae1-9d9d0dbfea4f.png)
 
 위와 같이 Liveness Probe가 적용되어 Milage서비스의 pod가 재생성 되고 있는것을 확인할 수 있다.
