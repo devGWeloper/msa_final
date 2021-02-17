@@ -72,3 +72,6 @@ hystrix:
   command:
     default:
       execution.isolation.thread.timeoutInMilliseconds: 610
+api:
+  url:
+    Shop: http://Shop:8080
