@@ -17,7 +17,7 @@ spec:
     spec:
       containers:
         - name: shop
-          image: hispres.azurecr.io/shop:v1
+          image: skuser02.azurecr.io/shop:v1
           ports:
             - containerPort: 8080
           readinessProbe:
