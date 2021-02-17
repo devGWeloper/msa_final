@@ -65,3 +65,14 @@ spring:
         event-out:
           destination: winterschoolone
           contentType: application/json
+feign:
+  hystrix:
+    enabled: true
+hystrix:
+  command:
+    default:
+      execution.isolation.thread.timeoutInMilliseconds: 610
+api:
+  url:
+    Shop: ${configurl}
+
