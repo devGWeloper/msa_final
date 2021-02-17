@@ -65,3 +65,7 @@ spring:
         event-out:
           destination: winterschoolone
           contentType: application/json
+api:
+  url:
+    Payment: http://Payment:8080
+          
