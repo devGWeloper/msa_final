@@ -342,4 +342,124 @@ public interface ShopService {
 ![재기동후 취소성공화면](https://user-images.githubusercontent.com/53815271/108074251-55bbf800-70ac-11eb-8e9e-b1eae99943cd.png)
 
 # 운영
-.
+
+# Deploy / Pipeline
+
+- git에서 소스 가져오기
+
+```
+git clone https://github.com/devGWeloper/msa_final.git
+```
+
+- Build 하기
+```
+cd /msa_final
+cd gateway
+mvn package
+
+cd ..
+cd sirenorder
+mvn package
+
+cd ..
+cd payment
+mvn package
+
+cd ..
+cd shop
+mvn package
+
+cd ..
+cd sirenorderhome
+mvn package
+
+cd ..
+cd milage
+mvn package
+```
+
+- Docker Image Push
+```
+cd ..
+cd SirenOrder
+az acr build --registry skuser02 --image skuser02.azurecr.io/sirenorder:v3 .
+
+cd ..
+cd Payment
+az acr build --registry skuser02 --image skuser02.azurecr.io/payment:v1 .
+
+cd ..
+cd Shop
+az acr build --registry skuser02 --image skuser02.azurecr.io/shop:v1 .
+
+cd ..
+cd Gateway
+az acr build --registry skuser02 --image skuser02.azurecr.io/gateway:v1 .
+
+cd ..
+cd SirenOrderHome
+az acr build --registry skuser02 --image skuser02.azurecr.io/sirenorderhome:v1 .
+
+cd ..
+cd Milage
+az acr build --registry skuser02 --image skuser02.azurecr.io/milage:v5 .
+```
+- ACR에서 이미지 가져와서 Kubernetes에서 Deploy하기
+```
+kubectl create deploy sirenorder --image=skuser02.azurecr.io/sirenorder:v3 -n tutorial
+kubectl create deploy payment --image=skuser02.azurecr.io/payment:v1 -n tutorial
+kubectl create deploy shop --image=skuser02.azurecr.io/shop:v1 -n tutorial
+kubectl create deploy gateway --image=skuser02.azurecr.io/gateway:v1 -n tutorial
+kubectl create deploy sirenorderhome --image=skuser02.azurecr.io/sirenorderhome:v1 -n tutorial
+kubectl create deploy milage --image=skuser02.azurecr.io/milage:v5 -n tutorial
+kubectl get all -n tutorial
+```
+- Kubectl Deploy 결과 확인
+
+- Kubernetes에서 서비스 노출 (Docker 생성이기에 Port는 8080이며, Gateway는 LoadBalancer로 생성)
+```
+kubectl expose deploy sirenorder --type="ClusterIP" --port=8080 -n tutorial
+kubectl expose deploy payment --type="ClusterIP" --port=8080 -n tutorial
+kubectl expose deploy shop --type="ClusterIP" --port=8080 -n tutorial
+kubectl expose deploy gateway --type="LoadBalancer" --port=8080 -n tutorial
+kubectl expose deploy sirenorderhome --type="ClusterIP" --port=8080 -n tutorial
+kubectl expose deploy milage --type="ClusterIP" --port=8080 -n tutorial
+kubectl get all -n tutorial
+```
+
+ # 오토 스케일 아웃
+- 오토 스케일을 위해 yml 파일 설정
+ 
+- 오토 스케일 적용 명령어 입력
+
+- 시즈 발생 후 오토스케일 결과 확인
+```
+siege -c100 -t120S -r10 -v --content-type "application/json" 'http://Milage:8080/milages POST {"orderId": 1, "point": 100}'
+```
+위와 같이 시즈를 발생시켜 Milage서비스의 pod가 오토 스케일 아웃이 된 것을 확인 할 수 있다.
+ 
+ # 무정지 배포
+ - readiness 적용 이전
+ 
+ 무정지 배포적용을 하지 않은 Milage 서비스의 yml파일이다
+ 
+ - 무정지 배포 실패 화면
+
+시즈를 발생시키는 도중 배포를 실행하여 몇개의 요청이 실패된것을 확인할 수 있다.
+
+- readiness 적용
+
+다음과 같이 Milage 서비스의 yml파일에서 readiness를 적용하고 apply 시킨 화면이다.
+
+- 무정지 배포 성공
+
+시즈를 발생시키는 도중 배포를 실행해도 모든 요청이 성공하여 무정지 배포가 성공적으로 적용된 것을 볼 수 있다.
+ 
+ # Self Healing (Liveness Probe)
+ - Liveness Probe 적용 yml파일
+ 
+Milage 서비스에 Self Healing을 적용하기 위해 다음과 같이 yml파일을 작성하였다.
+
+- Liveness Probe 결과 화면
+
+위와 같이 Liveness Probe가 적용되어 Milage서비스의 pod가 재생성 되고 있는것을 확인할 수 있다.
