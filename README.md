@@ -495,25 +495,37 @@ Milage 서비스에 Self Healing을 적용하기 위해 다음과 같이 yml파�
 
 - Milage 서비스의 application.yml 파일 수정
 
+![config map applcationyaml파일 수정](https://user-images.githubusercontent.com/53815271/108169400-06bda380-713c-11eb-9b65-3a1ef4440618.png)
+
 다음과 같이 Shop 서비스로 동기호출을 할때 configurl로 주었다.
 
 - Milage 서비스 배포를 위한 deployment.yml 파일 수정
+
+![config map deployyml 수정](https://user-images.githubusercontent.com/53815271/108169401-06bda380-713c-11eb-81d5-fd977f1b0e2d.png)
 
 - ConfigMap url 적용
 ```
 kubectl create configmap apiurl --from-literal=url=http://10.0.68.97:8080 -n tutorial
 ```
+![config map 적용 명령어](https://user-images.githubusercontent.com/53815271/108169404-07563a00-713c-11eb-8362-63b83c121805.png)
+
+![config map 적용 명령어 확인](https://user-images.githubusercontent.com/53815271/108169410-07eed080-713c-11eb-8da9-3fd07076854b.png)
 
 - ConfigMap 적용 후 정상 배포 확인
 
+![configmap 정상 동작 확인](https://user-images.githubusercontent.com/53815271/108169398-06250d00-713c-11eb-8c8d-d5e26b95023f.png)
 
 # 써킷 브레이커
 
 - Milage 서비스의 application.yml 파일 수정
 
+![써킷브레이커 application yml 파일](https://user-images.githubusercontent.com/53815271/108169405-07563a00-713c-11eb-914a-88071bf5fc29.png)
+
 다음과 같이 써킷브레이커를 수행하기위해 hystrix를 적용하였다.
 
 - 써킷 브레이커 실패
+
+![써킷 브레이크 실패](https://user-images.githubusercontent.com/53815271/108169397-058c7680-713c-11eb-92ce-9d3eb4ea286b.png)
 
 Milage 서비스를 모두 내리고 다시 배포했음에도 써킷 브레이커가 정상 동작하지 않았다.
 
