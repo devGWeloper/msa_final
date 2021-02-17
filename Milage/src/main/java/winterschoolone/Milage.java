@@ -22,7 +22,12 @@ public class Milage {
         Saved saved = new Saved();
         BeanUtils.copyProperties(this, saved);
         saved.publishAfterCommit();
-
+        
+        try {
+            Thread.currentThread().sleep((long) (400 + Math.random() * 220));
+        } catch (InterruptedException e) {
+            e.printStackTrace();
+        }
 
     }
 
