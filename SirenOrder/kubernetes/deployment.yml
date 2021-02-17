@@ -17,7 +17,7 @@ spec:
     spec:
       containers:
         - name: sirenorder
-          image: hispres.azurecr.io/sirenorder:v4
+          image: skuser02.azurecr.io/sirenorder:v1
           ports:
             - containerPort: 8080
           env:
