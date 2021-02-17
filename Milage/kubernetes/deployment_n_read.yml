@@ -1,0 +1,43 @@
+apiVersion: apps/v1
+kind: Deployment
+metadata:
+  name: milage
+  namespace: tutorial
+  labels:
+    app: milage
+spec:
+  replicas: 1
+  selector:
+    matchLabels:
+      app: milage
+  template:
+    metadata:
+      labels:
+        app: milage
+    spec:
+      containers:
+        - name: milage
+          image: skuser02.azurecr.io/shop:v1
+          ports:
+            - containerPort: 8080
+#          readinessProbe:
+#            httpGet:
+#              path: '/actuator/health'
+#              port: 8080
+#            initialDelaySeconds: 10
+#            timeoutSeconds: 2
+#            periodSeconds: 5
+#            failureThreshold: 10
+          livenessProbe:
+            httpGet:
+              path: '/actuator/health'
+              port: 8080
+            initialDelaySeconds: 120
+            timeoutSeconds: 2
+            periodSeconds: 5
+            failureThreshold: 5
+          resources:
+            limits:
+              cpu: 500m
+            requests:
+              cpu: 200m
