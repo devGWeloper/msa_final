@@ -490,3 +490,31 @@ Milage 서비스에 Self Healing을 적용하기 위해 다음과 같이 yml파�
 ![live적용 증명](https://user-images.githubusercontent.com/53815271/108164886-f9e98180-7134-11eb-8ae1-9d9d0dbfea4f.png)
 
 위와 같이 Liveness Probe가 적용되어 Milage서비스의 pod가 재생성 되고 있는것을 확인할 수 있다.
+
+# ConfigMap 설정
+
+- Milage 서비스의 application.yml 파일 수정
+
+다음과 같이 Shop 서비스로 동기호출을 할때 configurl로 주었다.
+
+- Milage 서비스 배포를 위한 deployment.yml 파일 수정
+
+- ConfigMap url 적용
+```
+kubectl create configmap apiurl --from-literal=url=http://10.0.68.97:8080 -n tutorial
+```
+
+- ConfigMap 적용 후 정상 배포 확인
+
+
+# 써킷 브레이커
+
+- Milage 서비스의 application.yml 파일 수정
+
+다음과 같이 써킷브레이커를 수행하기위해 hystrix를 적용하였다.
+
+- 써킷 브레이커 실패
+
+Milage 서비스를 모두 내리고 다시 배포했음에도 써킷 브레이커가 정상 동작하지 않았다.
+
+코드상에서 부하를 주기위해 Sleep을 주었지만 모두 성공한 화면이다..
